@@ -1,0 +1,198 @@
+#include <genesis.h>
+#include "gfx.h"
+#include "music.h"
+#include "nn_core.h"
+#include "RSE_startingScreen.h"
+#include "visualPad.h"
+#include "nn_db.h"
+
+void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
+	const u16 palLogoStartFade1[16] =  {0x000,0x000,0x000,0x000,0x620,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000};
+	const u16 palLogoStartFade2[16] =  {0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x820,0x000,0x000,0x000,0x000,0x000,0x000};
+	const u16 palLogoStartFade3[16] =  {0x000,0x000,0x000,0x000,0x000,0xc40,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000};
+	const u16 palLogoStartFade4[16] =  {0x000,0x000,0xe40,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000};
+	const u16 palLogoStartFade5[16] =  {0x000,0xe62,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000};
+	const u16 palLogoStartFade6[16] =  {0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0xe84,0x000,0x000,0x000,0x000};
+	const u16 palLogoStartFade7[16] =  {0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0xe86,0x000,0x000,0x000,0x000,0x000,0x000,0x000};
+	const u16 palLogoStartFade8[16] =  {0x000,0x000,0x000,0x000,0x000,0x000,0xea8,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000};
+	const u16 palLogoStartFade9[16] =  {0x000,0x000,0x000,0xeca,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000};
+	const u16 palLogoStartFade10[16] = {0x000,0x000,0x000,0x000,0x000,0x000,0x000,0xecc,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000};
+	const u16 palLogoStartFade11[16] = {0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0xeee,0x000,0x000,0x000,0x000,0x000};
+	const u16 palLogoStartFade12[16] = {0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0xeee,0x000,0x000,0x000};
+	//----------------------------------------------------------
+	const u16 palLogoStartFade20[16] = {0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0xeee,0x000,0xeee,0x000,0x000,0x000};
+	const u16 palLogoStartFade21[16] = {0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0xeee,0x000,0xeee,0x000,0x000,0x000};
+	const u16 palLogoStartFade22[16] = {0x000,0x000,0x000,0x000,0x000,0x000,0x000,0xecc,0x000,0x000,0xeee,0x000,0xeee,0x000,0x000,0x000};
+	const u16 palLogoStartFade23[16] = {0x000,0x000,0x000,0xeca,0x000,0x000,0x000,0xecc,0x000,0x000,0xeee,0x000,0xeee,0x000,0x000,0x000};
+	const u16 palLogoStartFade24[16] = {0x000,0x000,0x000,0xeca,0x000,0x000,0xea8,0xecc,0x000,0x000,0xeee,0x000,0xeee,0x000,0x000,0x000};
+	const u16 palLogoStartFade25[16] = {0x000,0x000,0x000,0xeca,0x000,0x000,0xea8,0xecc,0xe86,0x000,0xeee,0x000,0xeee,0x000,0x000,0x000};
+	const u16 palLogoStartFade26[16] = {0x000,0x000,0x000,0xeca,0x000,0x000,0xea8,0xecc,0xe86,0x000,0xeee,0xe84,0xeee,0x000,0x000,0x000};
+	const u16 palLogoStartFade27[16] = {0x000,0xe62,0x000,0xeca,0x000,0x000,0xea8,0xecc,0xe86,0x000,0xeee,0xe84,0xeee,0x000,0x000,0x000};
+	const u16 palLogoStartFade28[16] = {0x000,0xe62,0xe40,0xeca,0x000,0x000,0xea8,0xecc,0xe86,0x000,0xeee,0xe84,0xeee,0x000,0x000,0x000};
+	const u16 palLogoStartFade29[16] = {0x000,0xe62,0xe40,0xeca,0x000,0xc40,0xea8,0xecc,0xe86,0x000,0xeee,0xe84,0xeee,0x000,0x000,0x000};
+	const u16 palLogoStartFade30[16] = {0x000,0xe62,0xe40,0xeca,0x000,0xc40,0xea8,0xecc,0xe86,0x820,0xeee,0xe84,0xeee,0x000,0x000,0x000};
+	VDP_setPaletteColors(0, palette_black, 64);
+	VDP_setPalette(PAL0, palette_grey);
+	VDP_drawImageEx(APLAN, &logostart_image, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, 50), 8, 10, FALSE, TRUE);
+	u16 endLoop = 0;
+	u16 lockFade = FALSE;
+	u16 sequencer = 0;
+	u16 konamiCodeComplete = FALSE;
+	KONAMICODEINIT;
+	Sprite sprites[4];
+	visualPadInit(&sprites, 120, 150);
+	const u16 promptX = 10;
+	const u16 promptY = 15;
+
+	startTimer(1); //clignotement press start
+	startTimer(0); //fade timing
+	startTimer(2); //endLoop
+	SPR_update(&sprites, 4);
+	while(!endLoop){
+		if(getTimer(0,0) >= FIX32(fadeSpeed) ){
+			switch(sequencer){
+				case 0:
+					VDP_fadePalTo(PAL1, palLogoStartFade1,fadeSpeed, 1);
+					sequencer++;
+					break;
+				case 1:
+					VDP_fadePalTo(PAL1, palLogoStartFade2,fadeSpeed, 1);
+					sequencer++;
+					break;
+				case 2:
+					VDP_fadePalTo(PAL1, palLogoStartFade3,fadeSpeed, 1);
+					sequencer++;
+					break;
+				case 3:
+					VDP_fadePalTo(PAL1, palLogoStartFade4,fadeSpeed, 1);
+					sequencer++;
+					break;
+				case 4:
+					VDP_fadePalTo(PAL1, palLogoStartFade5,fadeSpeed, 1);
+					sequencer++;
+					break;
+				case 5:
+					VDP_fadePalTo(PAL1, palLogoStartFade6,fadeSpeed, 1);
+					sequencer++;
+					break;
+				case 6:
+					VDP_fadePalTo(PAL1, palLogoStartFade7,fadeSpeed, 1);
+					sequencer++;
+					break;
+				case 7:
+					VDP_fadePalTo(PAL1, palLogoStartFade8,fadeSpeed, 1);
+					sequencer++;
+					break;
+				case 8:
+					VDP_fadePalTo(PAL1, palLogoStartFade9,fadeSpeed, 1);
+					sequencer++;
+					break;
+				case 9:
+					VDP_fadePalTo(PAL1, palLogoStartFade10,fadeSpeed, 1);
+					sequencer++;
+					break;
+				case 10:
+					VDP_fadePalTo(PAL1, palLogoStartFade11,fadeSpeed, 1);
+					sequencer++;
+					break;
+				case 11:
+					VDP_fadePalTo(PAL1, palLogoStartFade12,fadeSpeed, 1);
+					sequencer++;
+					break;
+				case 12:
+					VDP_fadePalTo(PAL1, palLogoStartFade20,fadeSpeed2, 1);
+					sequencer++;
+					break;
+				case 13:
+					VDP_fadePalTo(PAL1, palLogoStartFade21,fadeSpeed2, 1);
+					sequencer++;
+					break;
+				case 14:
+					VDP_fadePalTo(PAL1, palLogoStartFade22,fadeSpeed2, 1);
+					sequencer++;
+					break;
+				case 15:
+					VDP_fadePalTo(PAL1, palLogoStartFade23,fadeSpeed2, 1);
+					sequencer++;
+					break;
+				case 16:
+					VDP_fadePalTo(PAL1, palLogoStartFade24,fadeSpeed2, 1);
+					sequencer++;
+					break;
+				case 17:
+					VDP_fadePalTo(PAL1, palLogoStartFade25,fadeSpeed2, 1);
+					sequencer++;
+					break;
+				case 18:
+					VDP_fadePalTo(PAL1, palLogoStartFade26,fadeSpeed2, 1);
+					sequencer++;
+					break;
+				case 19:
+					VDP_fadePalTo(PAL1, palLogoStartFade27,fadeSpeed2, 1);
+					sequencer++;
+					break;
+				case 20:
+					VDP_fadePalTo(PAL1, palLogoStartFade28,fadeSpeed2, 1);
+					sequencer++;
+					break;
+				case 21:
+					VDP_fadePalTo(PAL1, palLogoStartFade29,fadeSpeed2, 1);
+					sequencer++;
+					break;
+				case 22:
+					VDP_fadePalTo(PAL1, palLogoStartFade30,fadeSpeed2, 1);
+					sequencer++;
+					break;
+				case 23:
+					VDP_fadePalTo(PAL1, logostart_image.palette->data,fadeSpeed2, 1);
+					sequencer++;
+					break;
+				default:
+					break;
+			}
+			startTimer(0);
+		}
+		if (!konamiCodeComplete){
+			if (getTimer(1, 0) > FIX32(20)){
+				printString(">", APLAN, vec2s16Make(promptX, promptY));
+			}
+			if (getTimer(1, 0) > FIX32(40)){
+				printString(" ", APLAN, vec2s16Make(promptX, promptY));
+				startTimer(1);
+			}
+			if (konButtonSeqState[1]) { printString("U", APLAN, vec2s16Make(promptX + 2, promptY)); }
+			if (konButtonSeqState[2]) { printString("U", APLAN, vec2s16Make(promptX + 3, promptY)); }
+			if (konButtonSeqState[3]) { printString("D", APLAN, vec2s16Make(promptX + 4, promptY)); }
+			if (konButtonSeqState[4]) { printString("D", APLAN, vec2s16Make(promptX + 5, promptY)); }
+			if (konButtonSeqState[5]) { printString("L", APLAN, vec2s16Make(promptX + 6, promptY)); }
+			if (konButtonSeqState[6]) { printString("R", APLAN, vec2s16Make(promptX + 7, promptY)); }
+			if (konButtonSeqState[7]) { printString("L", APLAN, vec2s16Make(promptX + 8, promptY)); }
+			if (konButtonSeqState[8]) { printString("R", APLAN, vec2s16Make(promptX + 9, promptY)); }
+			if (konButtonSeqState[9]) { printString("B", APLAN, vec2s16Make(promptX + 10, promptY)); }
+			if (konButtonSeqState[10]){ printString("A", APLAN, vec2s16Make(promptX + 11, promptY)); }
+		}
+
+		if(KONAMICODEUPDATE){
+			printString("Congratulation you have found",	APLAN, vec2s16Make(2, 16));
+			printString("my Konami code implementation.", APLAN, vec2s16Make(4, 17));
+			printString("Nothing special here", APLAN, vec2s16Make(2, 19));
+			printString("except my best Greetings.", APLAN, vec2s16Make(4, 20));
+			printString("- Nainain", APLAN, vec2s16Make(20, 22));
+			
+			konamiCodeComplete = TRUE;
+			SND_startPlay_VGM(konami_music);			
+		}
+		if(konamiCodeComplete && getTimer(1,0) > FIX32(50)){
+			printString("Press START",					APLAN, vec2s16Make(15, 23));
+		}
+		if(konamiCodeComplete && getTimer(1,0) > FIX32(100)){
+			printString("           ",					APLAN, vec2s16Make(15, 23));
+			startTimer(1);
+		}
+		if(konamiCodeComplete && JOY_readJoypad(JOY_1) == BUTTON_START) {  endLoop = 1; }
+		if(getTimer(2,0) > FIX32(400) && !konamiCodeComplete){ endLoop = 1;}
+		VDP_waitVSync();
+	}
+	VDP_clearPlan(VDP_PLAN_A,1);
+	VDP_clearPlan(VDP_PLAN_B,1);
+}
