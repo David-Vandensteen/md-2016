@@ -10,7 +10,7 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 	SYS_disableInts();
 	VDP_setScreenWidth320();
 	SPR_init(64);
-	VDP_setPaletteColors(0, palette_black, 64);
+	VDP_setPaletteColors(0, (u16*)palette_black, 64);
 	VDP_setPalette(PAL0, palette_grey);
 	VDP_setPalette(PAL3, visualpadpad_sprite.palette->data);
 	VDP_drawImageEx(APLAN, &logostart_image, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, 50), 8, 10, FALSE, TRUE);

@@ -122,5 +122,5 @@ void scenePlansPositionZero();
 /* UTILS KONAMI CODE */
 u16 konamiCodeUpdate(u16 *buttonSeq); //return TRUE when code is complete
 #define KONAMICODEINIT		u16 konButtonSeqState[12] = {0,0,0,0,0,0,0,0,0,0,0,0}
-#define KONAMICODEUPDATE	konamiCodeUpdate(&konButtonSeqState)
+#define KONAMICODEUPDATE	konamiCodeUpdate((u16*)&konButtonSeqState)
 #endif
