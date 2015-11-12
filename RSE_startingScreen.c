@@ -7,6 +7,15 @@
 #include "nn_db.h"
 
 void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
+	SYS_disableInts();
+	VDP_setScreenWidth320();
+	SPR_init(64);
+	VDP_setPaletteColors(0, palette_black, 64);
+	VDP_setPalette(PAL0, palette_grey);
+	VDP_setPalette(PAL3, visualpadpad_sprite.palette->data);
+	VDP_drawImageEx(APLAN, &logostart_image, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, 50), 8, 10, FALSE, TRUE);
+	SYS_enableInts();
+
 	const u16 palLogoStartFade1[16] =  {0x000,0x000,0x000,0x000,0x620,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000};
 	const u16 palLogoStartFade2[16] =  {0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x820,0x000,0x000,0x000,0x000,0x000,0x000};
 	const u16 palLogoStartFade3[16] =  {0x000,0x000,0x000,0x000,0x000,0xc40,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000};
@@ -31,16 +40,13 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 	const u16 palLogoStartFade28[16] = {0x000,0xe62,0xe40,0xeca,0x000,0x000,0xea8,0xecc,0xe86,0x000,0xeee,0xe84,0xeee,0x000,0x000,0x000};
 	const u16 palLogoStartFade29[16] = {0x000,0xe62,0xe40,0xeca,0x000,0xc40,0xea8,0xecc,0xe86,0x000,0xeee,0xe84,0xeee,0x000,0x000,0x000};
 	const u16 palLogoStartFade30[16] = {0x000,0xe62,0xe40,0xeca,0x000,0xc40,0xea8,0xecc,0xe86,0x820,0xeee,0xe84,0xeee,0x000,0x000,0x000};
-	VDP_setPaletteColors(0, palette_black, 64);
-	VDP_setPalette(PAL0, palette_grey);
-	VDP_drawImageEx(APLAN, &logostart_image, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, 50), 8, 10, FALSE, TRUE);
 	u16 endLoop = 0;
 	u16 lockFade = FALSE;
 	u16 sequencer = 0;
 	u16 konamiCodeComplete = FALSE;
 	KONAMICODEINIT;
 	Sprite sprites[4];
-	visualPadInit(&sprites, 120, 150);
+	visualPadInit(&sprites, 120, 150); 
 	const u16 promptX = 10;
 	const u16 promptY = 15;
 
@@ -180,7 +186,10 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 			printString("- Nainain", APLAN, vec2s16Make(20, 22));
 			
 			konamiCodeComplete = TRUE;
-			SND_startPlay_VGM(konami_music);			
+			SND_startPlay_VGM(konami_music);	
+			visualPadSetPosition(&sprites, -100, -170); //offscreen
+			SPR_update(&sprites, 4);
+		
 		}
 		if(konamiCodeComplete && getTimer(1,0) > FIX32(50)){
 			printString("Press START",					APLAN, vec2s16Make(15, 23));
@@ -191,6 +200,11 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 		}
 		if(konamiCodeComplete && JOY_readJoypad(JOY_1) == BUTTON_START) {  endLoop = 1; }
 		if(getTimer(2,0) > FIX32(400) && !konamiCodeComplete){ endLoop = 1;}
+
+		SPR_update(&sprites, 4);
+		if (endLoop){ SPR_end(); }
+
+
 		VDP_waitVSync();
 	}
 	VDP_clearPlan(VDP_PLAN_A,1);
