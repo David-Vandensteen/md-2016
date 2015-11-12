@@ -46,7 +46,7 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 	KONAMICODEINIT;
 	Sprite sprites[4];
 	visualPadInit((Sprite*)&sprites, 120, 150);
-    const vec2s16 promptPos = vec2s16Make(10, 15);
+	const vec2s16 promptPos = vec2s16Make(10, 15);
 	startTimer(1); //clignotement press start
 	startTimer(0); //fade timing
 	startTimer(2); //endLoop
@@ -201,7 +201,7 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 		SPR_update((Sprite*)&sprites, 4);
 		if (endLoop){ SPR_end(); }
         
-        visualPadUpdate((Sprite*)&sprites);
+		visualPadUpdate((Sprite*)&sprites);
 		VDP_waitVSync();
 	}
 	VDP_clearPlan(VDP_PLAN_A,1);
