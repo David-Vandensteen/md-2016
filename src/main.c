@@ -8,11 +8,13 @@
 #include <kdebug.h>
 
 int main(){
-	//TODO
+    //TODO
 	//sequencer
 	//scene fadein, fadeout
 	//cycle ID ou delta time SGDK /autoincrement
 	RSE_startingScreen(16,16);
+    
+    
 	//
 	//sceneInit(340);
 	//scenePlansPositionZero();

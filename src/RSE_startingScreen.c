@@ -41,19 +41,17 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 	const u16 palLogoStartFade29[16] = {0x000,0xe62,0xe40,0xeca,0x000,0xc40,0xea8,0xecc,0xe86,0x000,0xeee,0xe84,0xeee,0x000,0x000,0x000};
 	const u16 palLogoStartFade30[16] = {0x000,0xe62,0xe40,0xeca,0x000,0xc40,0xea8,0xecc,0xe86,0x820,0xeee,0xe84,0xeee,0x000,0x000,0x000};
 	u16 endLoop = 0;
-	u16 lockFade = FALSE;
 	u16 sequencer = 0;
 	u16 konamiCodeComplete = FALSE;
 	KONAMICODEINIT;
 	Sprite sprites[4];
-	visualPadInit(&sprites, 120, 150); 
-	const u16 promptX = 10;
-	const u16 promptY = 15;
+	visualPadInit((Sprite*)&sprites, 120, 150);
+    const vec2s16 promptPos = vec2s16Make(10, 15);
 
 	startTimer(1); //clignotement press start
 	startTimer(0); //fade timing
 	startTimer(2); //endLoop
-	SPR_update(&sprites, 4);
+	SPR_update((Sprite*)&sprites, 4);
 	while(!endLoop){
 		if(getTimer(0,0) >= FIX32(fadeSpeed) ){
 			switch(sequencer){
@@ -160,22 +158,22 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 		}
 		if (!konamiCodeComplete){
 			if (getTimer(1, 0) > FIX32(20)){
-				printString(">", APLAN, vec2s16Make(promptX, promptY));
+				printString(">", APLAN, promptPos);
 			}
 			if (getTimer(1, 0) > FIX32(40)){
-				printString(" ", APLAN, vec2s16Make(promptX, promptY));
+				printString(" ", APLAN, promptPos);
 				startTimer(1);
 			}
-			if (konButtonSeqState[1]) { printString("U", APLAN, vec2s16Make(promptX + 2, promptY)); }
-			if (konButtonSeqState[2]) { printString("U", APLAN, vec2s16Make(promptX + 3, promptY)); }
-			if (konButtonSeqState[3]) { printString("D", APLAN, vec2s16Make(promptX + 4, promptY)); }
-			if (konButtonSeqState[4]) { printString("D", APLAN, vec2s16Make(promptX + 5, promptY)); }
-			if (konButtonSeqState[5]) { printString("L", APLAN, vec2s16Make(promptX + 6, promptY)); }
-			if (konButtonSeqState[6]) { printString("R", APLAN, vec2s16Make(promptX + 7, promptY)); }
-			if (konButtonSeqState[7]) { printString("L", APLAN, vec2s16Make(promptX + 8, promptY)); }
-			if (konButtonSeqState[8]) { printString("R", APLAN, vec2s16Make(promptX + 9, promptY)); }
-			if (konButtonSeqState[9]) { printString("B", APLAN, vec2s16Make(promptX + 10, promptY)); }
-			if (konButtonSeqState[10]){ printString("A", APLAN, vec2s16Make(promptX + 11, promptY)); }
+			if (konButtonSeqState[1]) { printString("U", APLAN, vec2s16Make(promptPos.x + 2, promptPos.y)); }
+			if (konButtonSeqState[2]) { printString("U", APLAN, vec2s16Make(promptPos.x + 3, promptPos.y)); }
+			if (konButtonSeqState[3]) { printString("D", APLAN, vec2s16Make(promptPos.x + 4, promptPos.y)); }
+			if (konButtonSeqState[4]) { printString("D", APLAN, vec2s16Make(promptPos.x + 5, promptPos.y)); }
+			if (konButtonSeqState[5]) { printString("L", APLAN, vec2s16Make(promptPos.x + 6, promptPos.y)); }
+			if (konButtonSeqState[6]) { printString("R", APLAN, vec2s16Make(promptPos.x + 7, promptPos.y)); }
+			if (konButtonSeqState[7]) { printString("L", APLAN, vec2s16Make(promptPos.x + 8, promptPos.y)); }
+			if (konButtonSeqState[8]) { printString("R", APLAN, vec2s16Make(promptPos.x + 9, promptPos.y)); }
+			if (konButtonSeqState[9]) { printString("B", APLAN, vec2s16Make(promptPos.x + 10, promptPos.y)); }
+			if (konButtonSeqState[10]){ printString("A", APLAN, vec2s16Make(promptPos.x + 11, promptPos.y)); }
 		}
 
 		if(KONAMICODEUPDATE){
@@ -187,8 +185,8 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 			
 			konamiCodeComplete = TRUE;
 			SND_startPlay_VGM(konami_music);	
-			visualPadSetPosition(&sprites, -100, -170); //offscreen
-			SPR_update(&sprites, 4);
+			visualPadSetPosition((Sprite*)&sprites, -100, -170); //offscreen
+			SPR_update((Sprite*)&sprites, 4);
 		
 		}
 		if(konamiCodeComplete && getTimer(1,0) > FIX32(50)){
@@ -201,10 +199,10 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 		if(konamiCodeComplete && JOY_readJoypad(JOY_1) == BUTTON_START) {  endLoop = 1; }
 		if(getTimer(2,0) > FIX32(400) && !konamiCodeComplete){ endLoop = 1;}
 
-		SPR_update(&sprites, 4);
+		SPR_update((Sprite*)&sprites, 4);
 		if (endLoop){ SPR_end(); }
-
-
+        
+        visualPadUpdate((Sprite*)&sprites);
 		VDP_waitVSync();
 	}
 	VDP_clearPlan(VDP_PLAN_A,1);
