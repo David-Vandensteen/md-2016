@@ -3,8 +3,12 @@
 #include "music.h"
 #include "nn_core.h"
 #include "RSE_startingScreen.h"
+#ifdef VISUALPAD_ON
 #include "visualPad.h"
+#endif
+#ifdef KONAMICODE_ON
 #include "nn_db.h"
+#endif
 
 void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 	SYS_disableInts();
@@ -42,15 +46,23 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 	const u16 palLogoStartFade30[16] = {0x000,0xe62,0xe40,0xeca,0x000,0xc40,0xea8,0xecc,0xe86,0x820,0xeee,0xe84,0xeee,0x000,0x000,0x000};
 	u16 endLoop = 0;
 	u16 sequencer = 0;
+	#ifdef KONAMICODE_ON
 	u16 konamiCodeComplete = FALSE;
 	KONAMICODEINIT;
+	#endif
+	#ifdef VISUALPAD_ON
 	Sprite sprites[4];
 	visualPadInit((Sprite*)&sprites, 120, 150);
+	#endif //VISUALPAD_ON
+	#ifdef KONAMICODE_ON
 	const vec2s16 promptPos = vec2s16Make(10, 15);
 	startTimer(1); //clignotement press start
+	#endif //KONAMICODE_ON
 	startTimer(0); //fade timing
 	startTimer(2); //endLoop
+	#ifdef VISUALPAD_ON
 	SPR_update((Sprite*)&sprites, 4);
+	#endif //VISUALPAD_ON
 	while(!endLoop){
 		if(getTimer(0,0) >= FIX32(fadeSpeed) ){
 			switch(sequencer){
@@ -155,6 +167,7 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 			}
 			startTimer(0);
 		}
+		#ifdef KONAMICODE_ON
 		if (!konamiCodeComplete){
 			if (getTimer(1, 0) > FIX32(20)){
 				printString(">", APLAN, promptPos);
@@ -174,7 +187,6 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 			if (konButtonSeqState[9]) { printString("B", APLAN, vec2s16Make(promptPos.x + 10, promptPos.y)); }
 			if (konButtonSeqState[10]){ printString("A", APLAN, vec2s16Make(promptPos.x + 11, promptPos.y)); }
 		}
-
 		if(KONAMICODEUPDATE){
 			printString("Congratulation you have found",	APLAN, vec2s16Make(2, 16));
 			printString("my Konami code implementation.", APLAN, vec2s16Make(4, 17));
@@ -183,10 +195,11 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 			printString("- Nainain", APLAN, vec2s16Make(20, 22));
 			
 			konamiCodeComplete = TRUE;
-			SND_startPlay_VGM(konami_music);	
+			SND_startPlay_VGM(konami_music);
+			#ifdef VISUALPAD_ON
 			visualPadSetPosition((Sprite*)&sprites, -100, -170); //offscreen
 			SPR_update((Sprite*)&sprites, 4);
-		
+			#endif		
 		}
 		if(konamiCodeComplete && getTimer(1,0) > FIX32(50)){
 			printString("Press START",					APLAN, vec2s16Make(15, 23));
@@ -197,11 +210,14 @@ void RSE_startingScreen(u16 fadeSpeed, u16 fadeSpeed2){
 		}
 		if(konamiCodeComplete && JOY_readJoypad(JOY_1) == BUTTON_START) {  endLoop = 1; }
 		if(getTimer(2,0) > FIX32(400) && !konamiCodeComplete){ endLoop = 1;}
-
+		#endif // KONAMICODE_ON
+		#ifdef VISUALPAD_ON
 		SPR_update((Sprite*)&sprites, 4);
 		if (endLoop){ SPR_end(); }
-        
+
 		visualPadUpdate((Sprite*)&sprites);
+		#endif //VISUALPAD_ON
+
 		VDP_waitVSync();
 	}
 	VDP_clearPlan(VDP_PLAN_A,1);
