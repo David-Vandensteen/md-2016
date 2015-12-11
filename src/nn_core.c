@@ -1,6 +1,4 @@
 #include "nn_core.h"
-/* GLOBALS VAR */
-extern s16 _vbl_count;
 
 /*	VECTOR */
 vec2s16 vec2s16Make(s16 x, s16 y){
@@ -104,21 +102,21 @@ Vect2D_u32 Vect2D_u32MakeZero(){
 
 /* UTILS */
 scrolling scrollingMake(vec2s16 pos, vec2s16 posInc, u16 vblFrameSkip){
-	scrolling rScrolling;
-	rScrolling.pos = pos;
-	rScrolling.posInc = posInc;
-	rScrolling.vblFrameSkip = vblFrameSkip;
-	return rScrolling;
+	scrolling r;
+	r.pos = pos;
+	r.posInc = posInc;
+	r.vblFrameSkip = vblFrameSkip;
+	return r;
 
 }
 scrolling ScrollingMakeZero(){
-	scrolling rScrolling;
-	rScrolling.pos.x = 0;
-	rScrolling.pos.y = 0;
-	rScrolling.posInc.x = 0;
-	rScrolling.posInc.y = 0;
-	rScrolling.vblFrameSkip = 0;
-	return rScrolling;
+	scrolling r;
+	r.pos.x = 0;
+	r.pos.y = 0;
+	r.posInc.x = 0;
+	r.posInc.y = 0;
+	r.vblFrameSkip = 0;
+	return r;
 }
 void scrollingUpdate(scrolling *scrolling){
 
@@ -208,69 +206,4 @@ u16 konamiCodeUpdate(u16 *buttonSeq){
 	return r;
 }
 
-/* UTILS  */
-void sceneInit(s16 spriteCacheSize){
-	VDP_clearPlan(APLAN,0);
-	VDP_clearPlan(BPLAN,0);
-	MEM_init();
-	VDP_init();
-	VDP_setScreenHeight224();
-	VDP_setScreenWidth320();
-	if (spriteCacheSize > 0) {
-		SPR_clear();
-		SPR_init(spriteCacheSize);
-	}
-	_vbl_count = 0;
-}
-void scenePlansPositionZero(){
-	VDP_setHorizontalScroll(PLAN_A,0);
-	VDP_setVerticalScroll(PLAN_A, 0);
-	VDP_setHorizontalScroll(PLAN_B,0);
-	VDP_setVerticalScroll(PLAN_B, 0);
-}
 void pause(u16 vblTempo);
-
-
-
-/* SPRITE */
-spr sprMake(u16 idSpr, vec2s16 pos, vec2s16 posInc, u16 vblSkipTranslation){
-	spr r;
-	r.idSpr = idSpr;
-	r.pos.x = pos.x;
-	r.pos.y = pos.y;
-	r.posInc.x = posInc.x;
-	r.posInc.y = posInc.y;
-	r.vblSkipTranslation = vblSkipTranslation;
-	r.firstUpdate = 0;
-	return r;
-}
-spr sprMakeZero(){
-	spr r;
-	r.idSpr = 0;
-	r.pos = vec2s16MakeZero();
-	r.posInc = vec2s16MakeZero();
-	r.vblSkipTranslation = 0;
-	r.firstUpdate = 0;
-	return r;
-}
-spr sprMakeDefault(u16 idSpr){
-	spr r = sprMakeZero();
-	r.idSpr = idSpr;
-	return r;
-}
-
-/*	SPRITE	*/
-void sprUpdate(spr *spr){
-	if (!spr->firstUpdate){
-		//Memorisation des valeurs d origine dans les "slots" orig... de la structure
-		spr->firstUpdate = 1;
-		spr->origPos.x = spr->pos.x;
-		spr->origPos.y = spr->pos.y;
-		spr->origPosInc.x = spr->posInc.x;
-		spr->origPosInc.y = spr->posInc.y;
-	}
-	if (spr->vblSkipTranslation == 0 || _vbl_count % spr->vblSkipTranslation == 0){
-		if (spr->posInc.x != 0) spr->pos.x += spr->posInc.x;
-		if (spr->posInc.y != 0) spr->pos.y += spr->posInc.y;
-	}
-}

@@ -60,3 +60,5 @@ src/out/rom_head.bin
 src/out/rom.bin
 
 src/out/rom.out
+
+src/res/Thumbs.db

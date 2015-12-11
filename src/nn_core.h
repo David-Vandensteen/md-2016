@@ -5,13 +5,8 @@
 /***
 MEMO MEGADRIVE:
 VRAM            :               64 KBytes (64ko) (512 kbit)
-VRAM Range addr :               0000 - FFFF  (65535)
 Screen Res      :               320 x 224
-Estimated Max	 : 				 128 000
-pixels in VRAM
 
-RAM 			 :				 Add -Wpadded to GCC & check warning compilation
-Alignement
 
 Ne pas utiliser la compression gfx pour les sprites animes
 
@@ -32,9 +27,6 @@ vramIndex+= tribute_image.tileset->numTile;
 SYS_enableInts();
 
 ***/
-
-/* GLOBALS VAR CONST */
-s16 _vbl_count;
 
 /* STRUCT */
 typedef struct vec2s16 vec2s16;
@@ -98,29 +90,15 @@ Vect2D_u16 Vect2D_u16MakeZero();
 Vect2D_u32 Vect2D_u32MakeZero();
 
 
-/* SPRITE */
-spr sprMake(u16 idSpr, vec2s16 pos, vec2s16 posInc, u16 vblSkipTranslation);
-
-void sprUpdate(spr *spr);
-spr sprMakeZero();
-spr sprMakeDefault(u16 idSpr);
-
-
-
 /* UTILS */
 scrolling scrollingMake(vec2s16 pos, vec2s16 posInc, u16 vblFrameSkip);
 scrolling ScrollingMakeZero();
 void scrollingUpdate(scrolling *scrolling);
-void pause(u16 vblTempo);
-
-
-/* UTILS */
-void sceneInit(s16 spriteCacheSize);
-void scenePlansPositionZero();
-
 
 /* UTILS KONAMI CODE */
 u16 konamiCodeUpdate(u16 *buttonSeq); //return TRUE when code is complete
 #define KONAMICODEINIT		u16 konButtonSeqState[12] = {0,0,0,0,0,0,0,0,0,0,0,0}
 #define KONAMICODEUPDATE	konamiCodeUpdate((u16*)&konButtonSeqState)
+
+
 #endif
